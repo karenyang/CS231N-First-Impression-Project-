@@ -1,0 +1,7 @@
+digraph {
+	graph [size="12,12"]
+	node [align=left fontsize=12 height=0.2 ranksep=0.1 shape=box style=filled]
+	140532101481864 [label=Sigmoid]
+		140531986800136 -> 140532101481864
+	140531986800136 [label="(1, 3, 224, 224)" fillcolor=lightblue]
+}
