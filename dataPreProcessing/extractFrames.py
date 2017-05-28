@@ -66,6 +66,35 @@ def getfps_ubuntu(vidname, numcapturefps, saveto):
        image = vid.get_data(curframe)
        imageio.imwrite(filenmtemplate % i, image) # save frame as jpeg file
 
+'''
+a function that captures numCaptureFPS Frames per second
+from a video given by vidCap - a cv2.VideoCapture object
+created after it looks like VideoCapture doesn't work on ubuntu
+'''
+# math.floor def getfps_ubuntu(vidname, numcapturefps, saveto='./'):
+def getRegSpacing_ubuntu(vidname, numcapture, saveto):
+    vid = imageio.get_reader(vidname,  'ffmpeg')
+    filenmtemplate = os.path.join(saveto, 'frame%d.jpg')
+ 
+    meta_data = vid.get_meta_data()
+    numframes = meta_data["nframes"]
+    print 'numframes ' + str(numframes)
+
+    for i in range(numcapture):
+       image = vid.get_data(int(numframes/numcapture))
+       imageio.imwrite(filenmtemplate % i, image) # save frame as jpeg file
+
+def deleteMoviesWithFramesExtracted(dirName):
+  dirListing = os.listdir(dirName)
+  dirListing.sort()
+  print dirListing[0:50]
+  for i in range(len(dirListing)):
+   if dirListing[i].endswith(".mp4"):
+      # print 'dirListing ' + dirListing[i] + ' prev ' + dirListing[i-1] 
+      if dirListing[i + 1] == dirListing[i][:-4] + "_50uniform":
+        print'deleting' +  dirListing[i]
+        os.system('rm ./' +  dirListing[i])
+	
 
 '''
 Performes the specified function on all mp4 files in a directory specified by path
@@ -76,16 +105,20 @@ def doToAllMoviesInDir(path):
         if file.endswith(".mp4"):
             vidName = os.path.join(path, file)
             newFileName = os.path.join(path, file[:-4]) # excluding .mp4 endign
-            newFileName = newFileName + '_5fps' 
+            newFileName = newFileName + '_50uniform' 
             print 'newFileName' +  newFileName
             os.system('sudo mkdir ' + newFileName)
             print 'vidname ' + vidName
-            numFPS = 5
-            getfps_ubuntu(vidName, numFPS, newFileName)
-            # getfps_ubuntu(vidName, numFPS, saveTo=newFileName)
+	    numcapture = 50 
+	    getRegSpacing_ubuntu(vidName, numcapture, newFileName)
+            print 'deleting ' + vidName
+            os.system('rm ./' +  vidName)
+            # numFPS = 5
+            # getfps_ubuntu(vidName, numFPS, newFileName)
             # getFPS_windows(vidcap, numFPS, saveTo=newFileName)
 
 if __name__ == "__main__":
     sourceFile = sys.argv[1]
     print 'sourceFile ' + sourceFile
+    # deleteMoviesWithFramesExtracted(sourceFile)
     doToAllMoviesInDir(sourceFile)

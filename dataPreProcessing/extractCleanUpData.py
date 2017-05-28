@@ -1,15 +1,23 @@
 import os
-const destFile = 'train-2/'
-const extractPrefix = 'train80'
 
-if __name__ == __main__: 
-  for fileName in os.listdir(path):
-    if fileName.startswith(extractPrefix):
-      os.system('unzip ' + fileName)
+destFile = 'train-1-2-4/'
+extractPrefix = 'training80'
 
-  for fileName in os.listdir(path):
+def unzipAllFlsModNameMove():
+  for fileName in os.listdir('./'):
+   if fileName.startswith(extractPrefix):
+     os.system('unzip ' + fileName)
+
+  for fileName in os.listdir('./'):
+    if(fileName.startswith('train-')):
+    	continue
     newFileName = fileName
     while newFileName.startswith('-'):
       newFileName = newFileName[1:]
     os.system('mv ./' + fileName + ' ' + destFile + newFileName)
-	
+
+
+if __name__ == '__main__': 
+  dirName = sys.argv[1]
+  deleteMoviesWithFramesExtracted(dirName)
+
