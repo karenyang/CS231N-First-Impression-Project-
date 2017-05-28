@@ -38,12 +38,13 @@ if __name__ == "__main__":
 
     urls=["http://158.109.8.102/FirstImpressionsV2/train-1.zip",
           "http://158.109.8.102/FirstImpressionsV2/train-2.zip",
-          "http://158.109.8.102/FirstImpressionsV2/train-3.zip",
-          "http://158.109.8.102/FirstImpressionsV2/train-4.zip",
-          "http://158.109.8.102/FirstImpressionsV2/train-5.zip",
-          "http://158.109.8.102/FirstImpressionsV2/train-6.zip",
-          "http://158.109.8.102/FirstImpressionsV2/train-transcription.zip",
-          "http://158.109.8.102/FirstImpressionsV2/train-annotation.zip"]
+         # "http://158.109.8.102/FirstImpressionsV2/train-3.zip",
+         # "http://158.109.8.102/FirstImpressionsV2/train-4.zip",
+         # "http://158.109.8.102/FirstImpressionsV2/train-5.zip",
+         # "http://158.109.8.102/FirstImpressionsV2/train-6.zip",
+         # "http://158.109.8.102/FirstImpressionsV2/train-transcription.zip",
+         # "http://158.109.8.102/FirstImpressionsV2/train-annotation.zip"
+	]
 
     new_urls = []
     for url in urls:

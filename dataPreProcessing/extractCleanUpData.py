@@ -3,7 +3,7 @@ import random
 import os
 import pickle
 
-destFile = 'train-1-2-4/'
+destFile = 'train-1/'
 extractPrefix = 'training80'
 
 def splitIntoTrainVal(directory, ratio_of_train):
@@ -41,7 +41,7 @@ def resetNamesBack(dr):
             pass 
 
 def extractFromZipMove():
-  destFile = 'train-2/'
+  destFile = 'train-1/'
   extractPrefix = 'train80'
   for fileName in os.listdir(path):
     if fileName.startswith(extractPrefix):
@@ -55,12 +55,10 @@ def unzipAllFlsModNameMove():
   for fileName in os.listdir('./'):
     if(fileName.startswith('train-')):
     	continue
-    newFileName = fileName
-    while newFileName.startswith('-'):
-      newFileName = newFileName[1:]
-    os.system('mv ./' + fileName + ' ' + destFile + newFileName)
+    # os.system('mv ./' + fileName + ' ' + destFile + fileName)
 
 
 if __name__ == '__main__': 
-    sourceFile = sys.argv[1]
-    resetNamesBack(sourceFile)
+  #  sourceFile = sys.argv[1]
+    unzipAllFlsModNameMove()
+

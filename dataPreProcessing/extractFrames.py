@@ -2,6 +2,7 @@ import cv2
 import os
 import sys
 import imageio
+import numpy as np
 '''
 VideoCapture variables of interest
     CV_CAP_PROP_FPS Frame rate.
@@ -81,8 +82,10 @@ def getRegSpacing_ubuntu(vidname, numcapture, saveto):
     print 'numframes ' + str(numframes)
 
     for i in range(numcapture):
-       image = vid.get_data(int(numframes/numcapture))
-       imageio.imwrite(filenmtemplate % i, image) # save frame as jpeg file
+        partition_len = int(numframes/numcapture)
+        randomIndx = np.random.randint(i*partition_len, (i+1)*partition_len )
+        image = vid.get_data(randomIndx)
+        imageio.imwrite(filenmtemplate % i, image) # save frame as jpeg file
 
 def deleteMoviesWithFramesExtracted(dirName):
   dirListing = os.listdir(dirName)
@@ -91,10 +94,10 @@ def deleteMoviesWithFramesExtracted(dirName):
   for i in range(len(dirListing)):
    if dirListing[i].endswith(".mp4"):
       # print 'dirListing ' + dirListing[i] + ' prev ' + dirListing[i-1] 
-      if dirListing[i + 1] == dirListing[i][:-4] + "_50uniform":
+      if dirListing[i + 1] == dirListing[i][:-4] + "_10uniform":
         print'deleting' +  dirListing[i]
         os.system('rm ./' +  dirListing[i])
-	
+
 
 '''
 Performes the specified function on all mp4 files in a directory specified by path
@@ -109,13 +112,10 @@ def doToAllMoviesInDir(path):
             print 'newFileName' +  newFileName
             os.system('sudo mkdir ' + newFileName)
             print 'vidname ' + vidName
-	    numcapture = 50 
-	    getRegSpacing_ubuntu(vidName, numcapture, newFileName)
-            print 'deleting ' + vidName
-            os.system('rm ./' +  vidName)
-            # numFPS = 5
-            # getfps_ubuntu(vidName, numFPS, newFileName)
-            # getFPS_windows(vidcap, numFPS, saveTo=newFileName)
+            numcapture = 10
+            getRegSpacing_ubuntu(vidName, numcapture, newFileName)
+            # print 'deleting ' + vidName
+            # os.system('rm ./' +  vidName)
 
 if __name__ == "__main__":
     sourceFile = sys.argv[1]
