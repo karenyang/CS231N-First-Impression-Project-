@@ -3,6 +3,8 @@ import os
 import sys
 import imageio
 import numpy as np
+import scipy
+from  scipy import misc
 '''
 VideoCapture variables of interest
     CV_CAP_PROP_FPS Frame rate.
@@ -63,9 +65,9 @@ def getfps_ubuntu(vidname, numcapturefps, saveto):
     print 'videolength ' + str(videolength)
 
     for i in range(int(videolength*numcapturefps)):
-       curframe = i*int(videofps/numcapturefps)
-       image = vid.get_data(curframe)
-       imageio.imwrite(filenmtemplate % i, image) # save frame as jpeg file
+        curframe = i*int(videofps/numcapturefps)
+        image = vid.get_data(curframe)
+        imageio.imwrite(filenmtemplate % i, image) # save frame as jpeg file
 
 '''
 a function that captures numCaptureFPS Frames per second
@@ -85,18 +87,26 @@ def getRegSpacing_ubuntu(vidname, numcapture, saveto):
         partition_len = int(numframes/numcapture)
         randomIndx = np.random.randint(i*partition_len, (i+1)*partition_len )
         image = vid.get_data(randomIndx)
+        image = _resize_image(image, 256) 
         imageio.imwrite(filenmtemplate % i, image) # save frame as jpeg file
 
+def _resize_image(img, smaller_dim):
+    # another way: http://pillow.readthedocs.io/en/3.1.x/reference/Image.html#PIL.Image.Image.resize
+    img_shape_min = np.min(img.shape[0:2])
+    ratio = (1.0*img_shape_min)/smaller_dim
+    newSize = np.concatenate((np.array(img.shape[0:2])*(1/ratio), [3])).astype(int)
+    return scipy.misc.imresize(img, newSize)
+    
 def deleteMoviesWithFramesExtracted(dirName):
-  dirListing = os.listdir(dirName)
-  dirListing.sort()
-  print dirListing[0:50]
-  for i in range(len(dirListing)):
-   if dirListing[i].endswith(".mp4"):
-      # print 'dirListing ' + dirListing[i] + ' prev ' + dirListing[i-1] 
-      if dirListing[i + 1] == dirListing[i][:-4] + "_10uniform":
-        print'deleting' +  dirListing[i]
-        os.system('rm ./' +  dirListing[i])
+    dirListing = os.listdir(dirName)
+    dirListing.sort()
+    print dirListing[0:50]
+    for i in range(len(dirListing)):
+        if dirListing[i].endswith(".mp4"):
+            # print 'dirListing ' + dirListing[i] + ' prev ' + dirListing[i-1] 
+            if dirListing[i + 1] == dirListing[i][:-4] + "_10uniform":
+                print'deleting' +  dirListing[i]
+                os.system('rm ./' +  dirListing[i])
 
 
 '''
@@ -104,8 +114,11 @@ Performes the specified function on all mp4 files in a directory specified by pa
 Right now there is only getFPS, an make function template later
 '''
 def doToAllMoviesInDir(path):
+    i = 0
     for file in os.listdir(path):
         if file.endswith(".mp4"):
+            if(i%100 == 0):
+                print i
             vidName = os.path.join(path, file)
             newFileName = os.path.join(path, file[:-4]) # excluding .mp4 endign
             newFileName = newFileName + '_50uniform' 
@@ -116,6 +129,7 @@ def doToAllMoviesInDir(path):
             getRegSpacing_ubuntu(vidName, numcapture, newFileName)
             # print 'deleting ' + vidName
             # os.system('rm ./' +  vidName)
+            i = i + 1
 
 if __name__ == "__main__":
     sourceFile = sys.argv[1]
