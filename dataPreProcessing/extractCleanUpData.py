@@ -59,6 +59,7 @@ def unzipAllFlsModNameMove():
 
 
 if __name__ == '__main__': 
-  #  sourceFile = sys.argv[1]
-    unzipAllFlsModNameMove()
+    sourceFile = sys.argv[1]
+    splitIntoTrainVal(sourceFile, .8)
+  #   unzipAllFlsModNameMove()
 
