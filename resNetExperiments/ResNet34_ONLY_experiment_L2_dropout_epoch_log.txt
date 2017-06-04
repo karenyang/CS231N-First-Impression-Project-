@@ -37,3 +37,5 @@ Epoch: [48]	 Train Loss: 0.017587  	 Val Loss: 0.019245
 Epoch: [49]	 Train Loss: 0.017514  	 Val Loss: 0.017858
 Epoch: [50]	 Train Loss: 0.017507  	 Val Loss: 0.019300
 Epoch: [51]	 Train Loss: 0.017516  	 Val Loss: 0.018262
+Epoch: [52]	 Train Loss: 0.017497  	 Val Loss: 0.017838
+Epoch: [53]	 Train Loss: 0.017455  	 Val Loss: 0.018609
