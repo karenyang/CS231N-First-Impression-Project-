@@ -23,10 +23,10 @@ import copy
 import shutil
 from torchvision import  transforms
 
-train_dataset_dir = '/home/noa_glaser//proj/data/train-frames/train'
-val_dataset_dir = '/home/noa_glaser/proj/data/train-frames/val'
-audio_dataset_dir = '/home/noa_glaser/proj/data/train-audio'
-label_dataset_dir = train_dataset_dir
+train_dataset_dir = '/home/noa_glaser/dataBig/train-frames/train'
+val_dataset_dir = '/home/noa_glaser/dataBig/train-frames/val'
+audio_dataset_dir = '/home/noa_glaser/dataBig/train-audio'
+label_dataset_dir = '/home/noa_glaser/dataBig/'
 exp_name = 'ResNet34_ONLY_experiment_L2_dropout' # roughly 3K videos
 num_classes = 5 
 num_partition = 10
@@ -65,7 +65,7 @@ filenames and inferred class names.
     movies= []
     labels = []
 
-    annotaion_filename = dataset_dir + "/annotation_training.pkl"
+    annotaion_filename  = label_dataset_dir + 'annotation_training.pkl'
     
     with open(annotaion_filename, 'rb') as f:
         label_dicts = pickle.load(f, encoding='latin1') 
@@ -142,24 +142,24 @@ def imshow(inp, title=None):
         plt.title(title)
     plt.pause(0.001)  # pause a bit so that plots are updated
 
+# dset_sizes = {x: len(dsets[x]) for x in ['train']}
+# get the data file names
+training_filenames, train_labels, train_movies = _get_imgname_and_moviename_and_labels( train_dataset_dir)  
+validation_filenames, val_labels, val_movies = _get_imgname_and_moviename_and_labels(val_dataset_dir)  
+# This is the function the visualizer will be using 
+# initialize the dataset , modifying to get rid of the validation images, don't need those 
+# TODO : wrap in some initializer later 
+dsets = {}
+dsets['train'] = Visual_ONLY(train_dataset_dir,'train',training_filenames, \
+                             train_movies,train_labels,transform=data_transforms['train'] )
+dset_loaders = {x: torch.utils.data.DataLoader(dsets[x], batch_size=32,
+                                               shuffle=True, num_workers=4)
+                for x in ['train']}
+
 '''
 The function that we will be using
 '''
-# This is the function the visualizer will be using 
-def returnSampleDataBatch():    
-    # get the data file names
-    training_filenames, train_labels, train_movies = _get_imgname_and_moviename_and_labels( train_dataset_dir)  
-    validation_filenames, val_labels, val_movies = _get_imgname_and_moviename_and_labels(val_dataset_dir)  
-
-    # initialize the dataset , modifying to get rid of the validation images, don't need those 
-    dsets = {}
-    dsets['train'] = Visual_ONLY(train_dataset_dir,'train',training_filenames, \
-                                 train_movies,train_labels,transform=data_transforms['train'] )
-    dset_loaders = {x: torch.utils.data.DataLoader(dsets[x], batch_size=32,
-                                                   shuffle=True, num_workers=4)
-                    for x in ['train']}
-    # dset_sizes = {x: len(dsets[x]) for x in ['train']}
-
+def returnSampleDataBatch():  
     train_imgsamples,train_labelsample = next(iter(dset_loaders['train']))
     # train_unflattened_sample = train_imgsamples.view(-1,3,256,256)
     return train_imgsamples,train_labelsample 
